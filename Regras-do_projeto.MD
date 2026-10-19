@@ -1,0 +1,3 @@
+Regras-do-projeto.md
+Linguagem: Python 3.12; dependências permitidas: biblioteca padrão, 
+FastAPI e SQLAlchemy. Nada além disso sem decisão registrada. - Dinheiro: decimal.Decimal; nunca float. Datas: datetime com fuso explícito. - Erros: exceções do módulo app.erros; nunca retornar None para indicar falha. - Nomes: funções e variáveis em português; classes em CamelCase. - Testes: pytest, um arquivo por módulo; casos de erro são obrigatórios. - Toda função pública com docstring de uma linha. 

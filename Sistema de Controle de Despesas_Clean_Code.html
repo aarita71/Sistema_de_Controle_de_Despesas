@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<!-- saved from url=(0150)https://49983-it1lux2tgzkz2yxvgl7p2.e2b.app/files?path=%2Ftmp%2Fsistema_despesas_clean.html&signature=v1_jorS2889Chd9HtRzymDYgGfaQDh%2BLu8wrRheDlhsFTQ -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Controle de Despesas</title>
+    <style>
+        /* ===== Design Tokens ===== */
+        :root {
+            --color-primary: #667eea;
+            --color-secondary: #764ba2;
+            --color-danger: #ff6b6b;
+            --color-danger-dark: #ee5a6f;
+            --color-text: #333;
+            --color-muted: #666;
+            --color-subtle: #999;
+            --color-border: #e0e0e0;
+            --color-surface: #f8f9fa;
+            --color-bg: #ffffff;
+            --color-error-bg: #fee;
+            --color-error-text: #c33;
+            --color-success-bg: #efe;
+            --color-success-text: #3c3;
+
+            --gradient-brand: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            --gradient-danger: linear-gradient(135deg, var(--color-danger) 0%, var(--color-danger-dark) 100%);
+
+            --radius-sm: 8px;
+            --radius-md: 10px;
+            --radius-lg: 15px;
+
+            --space-xs: 8px;
+            --space-sm: 10px;
+            --space-md: 20px;
+            --space-lg: 25px;
+            --space-xl: 30px;
+            --space-xxl: 40px;
+
+            --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+            --font-stack: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-stack);
+            background: var(--gradient-brand);
+            min-height: 100vh;
+            padding: var(--space-md);
+            color: var(--color-text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ===== Header ===== */
+        header.page-header {
+            text-align: center;
+            color: var(--color-bg);
+            margin-bottom: var(--space-xl);
+        }
+
+        header.page-header h1 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            margin-bottom: var(--space-xs);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header.page-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* ===== Stats Grid ===== */
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: var(--space-md);
+        }
+
+        .stat-card {
+            background: var(--color-bg);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-value {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--color-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* ===== Main Content Grid ===== */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        /* ===== Card ===== */
+        .card {
+            background: var(--color-bg);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card h2 {
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+            font-size: 1.5rem;
+            border-bottom: 3px solid var(--color-primary);
+            padding-bottom: var(--space-xs);
+        }
+
+        /* ===== Form ===== */
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            transition: border-color var(--transition-normal);
+            font-family: inherit;
+            color: var(--color-text);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .form-group input:focus-visible,
+        .form-group select:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* ===== Buttons ===== */
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gradient-brand);
+            color: var(--color-bg);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active { transform: translateY(0); }
+
+        .btn:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .btn-danger {
+            background: var(--gradient-danger);
+            padding: var(--space-xs) 15px;
+            width: auto;
+            font-size: 0.9rem;
+        }
+
+        /* ===== Summary Items ===== */
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: var(--space-xs);
+            background: var(--color-surface);
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .summary-item.category { font-size: 1rem; }
+
+        .summary-item.total {
+            background: var(--gradient-brand);
+            color: var(--color-bg);
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-left: none;
+            margin-top: var(--space-md);
+        }
+
+        .summary-value {
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .summary-item.total .summary-value { color: var(--color-bg); }
+
+        /* ===== Expenses List ===== */
+        .expenses-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-md);
+            padding: 15px;
+            margin-bottom: var(--space-xs);
+            background: var(--color-surface);
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--color-secondary);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+            flex-wrap: wrap;
+        }
+
+        .expense-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .expense-info { flex: 1; min-width: 200px; }
+
+        .expense-category {
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .expense-description {
+            color: var(--color-muted);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .expense-date {
+            color: var(--color-subtle);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .expense-amount {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        /* ===== Empty State ===== */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-xxl) var(--space-md);
+            color: var(--color-subtle);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        /* ===== Feedback Messages ===== */
+        .feedback-message {
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 15px;
+            border-left: 4px solid;
+            display: none;
+        }
+
+        .feedback-message.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .feedback-message--error {
+            background: var(--color-error-bg);
+            color: var(--color-error-text);
+            border-left-color: var(--color-error-text);
+        }
+
+        .feedback-message--success {
+            background: var(--color-success-bg);
+            color: var(--color-success-text);
+            border-left-color: var(--color-success-text);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== Responsive ===== */
+        @media (min-width: 768px) {
+            .stats { grid-template-columns: repeat(3, 1fr); }
+            .main-content { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ===== Visually Hidden (screen-reader only) ===== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header class="page-header">
+            <h1>💰 Sistema de Controle de Despesas</h1>
+            <p>Gerencie suas finanças de forma simples e eficiente</p>
+        </header>
+
+        <section class="stats" aria-label="Estatísticas gerais">
+            <dl class="stat-card">
+                <dd class="stat-value" id="stat-total-count">1</dd>
+                <dt class="stat-label">Total de Despesas</dt>
+            </dl>
+            <dl class="stat-card">
+                <dd class="stat-value" id="stat-total-categories">1</dd>
+                <dt class="stat-label">Categorias</dt>
+            </dl>
+            <dl class="stat-card">
+                <dd class="stat-value" id="stat-total-amount">R$&nbsp;100,00</dd>
+                <dt class="stat-label">Total Gasto</dt>
+            </dl>
+        </section>
+
+        <div class="main-content">
+            <section class="card" aria-labelledby="form-heading">
+                <h2 id="form-heading">➕ Adicionar Nova Despesa</h2>
+
+                <div id="errorMessage" class="feedback-message feedback-message--error" role="status" aria-live="polite" aria-atomic="true"></div>
+                <div id="successMessage" class="feedback-message feedback-message--success" role="status" aria-live="polite" aria-atomic="true"></div>
+
+                <form id="expenseForm" novalidate="">
+                    <div class="form-group">
+                        <label for="category">Categoria *</label>
+                        <select id="category" required="">
+                            <option value="">Selecione uma categoria</option>
+                            <option value="Alimentação">Alimentação</option>
+                            <option value="Transporte">Transporte</option>
+                            <option value="Moradia">Moradia</option>
+                            <option value="Lazer">Lazer</option>
+                            <option value="Saúde">Saúde</option>
+                            <option value="Educação">Educação</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Descrição</label>
+                        <input type="text" id="description" maxlength="100" placeholder="Ex: Almoço, Uber, Aluguel..." autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Valor (R$) *</label>
+                        <input type="number" id="amount" step="0.01" min="0.01" placeholder="0,00" required="" inputmode="decimal">
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Data *</label>
+                        <input type="date" id="date" required="">
+                    </div>
+                    <button type="submit" class="btn">Adicionar Despesa</button>
+                </form>
+            </section>
+
+            <section class="card" aria-labelledby="summary-heading">
+                <h2 id="summary-heading">📊 Resumo por Categoria</h2>
+                <div id="categorySummary" aria-live="polite"><div class="summary-item category"><span>Alimentação</span><span class="summary-value">R$&nbsp;100,00</span></div><div class="summary-item total"><span>Total Geral</span><span class="summary-value">R$&nbsp;100,00</span></div></div>
+            </section>
+        </div>
+
+        <section class="card" aria-labelledby="list-heading">
+            <h2 id="list-heading">📋 Lista de Despesas</h2>
+            <div id="expensesList" class="expenses-list" aria-live="polite"><article class="expense-item" data-expense-id="7e089a40-d068-425a-99e1-69cd2b1ae3f4"><div class="expense-info"><h3 class="expense-category">Alimentação</h3><p class="expense-description">Almoço</p><time class="expense-date" datetime="2026-01-10">📅 10/01/2026</time></div><span class="expense-amount">R$&nbsp;100,00</span><button type="button" class="btn btn-danger" data-action="remove" aria-label="Remover despesa de Alimentação no valor de R$&nbsp;100,00">🗑️ Remover</button></article></div>
+        </section>
+    </main>
+
+    <script>
+        'use strict';
+
+        /* ==========================================================
+         *  CONSTANTES
+         * ========================================================== */
+        const STORAGE_KEY = 'despesas:v1';
+        const MIN_AMOUNT_CENTS = 1;            // R$ 0,01
+        const MESSAGE_VISIBLE_MS = 3000;
+        const CURRENCY_FORMAT = new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+        });
+
+        /* ==========================================================
+         *  UTILITÁRIOS
+         * ========================================================== */
+
+        /**
+         * Gera ID único (evita colisão de Date.now() em cliques rápidos).
+         * @returns {string}
+         */
+        const createId = () =>
+            globalThis.crypto?.randomUUID?.() ??
+            `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+
+        /**
+         * Formata centavos (número inteiro) em moeda BRL.
+         * @param {number} cents
+         * @returns {string}
+         */
+        const formatCents = (cents) => CURRENCY_FORMAT.format(cents / 100);
+
+        /**
+         * Converte string ISO "YYYY-MM-DD" em data local correta.
+         * Evita new Date("YYYY-MM-DD") que é tratado como UTC e corrompe datas em fusos negativos.
+         * @param {string} isoDate
+         * @returns {string} ex.: "16/10/2026"
+         */
+        function formatDate(isoDate) {
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return '—';
+            const [year, month, day] = isoDate.split('-').map(Number);
+            const local = new Date(year, month - 1, day);
+            return local.toLocaleDateString('pt-BR');
+        }
+
+        /** Retorna "YYYY-MM-DD" para <input type="date"> no fuso local. */
+        function todayLocalIso() {
+            const now = new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+        }
+
+        /**
+         * Converte entrada de moeda para centavos inteiros (evita float).
+         * @param {string} raw
+         * @returns {{ ok: true, cents: number } | { ok: false, reason: string }}
+         */
+        function parseAmountToCents(raw) {
+            const normalized = String(raw).trim().replace(',', '.');
+            const value = Number(normalized);
+
+            if (!Number.isFinite(value)) {
+                return { ok: false, reason: 'Por favor, insira um valor numérico válido.' };
+            }
+            if (value <= 0) {
+                return { ok: false, reason: 'O valor da despesa deve ser maior que zero.' };
+            }
+            const cents = Math.round(value * 100);
+            if (cents < MIN_AMOUNT_CENTS) {
+                return { ok: false, reason: 'O valor mínimo é R$ 0,01.' };
+            }
+            return { ok: true, cents };
+        }
+
+        /** Sanitiza texto para evitar quebras de layout (defesa em profundidade). */
+        function sanitizeText(value) {
+            return String(value ?? '').trim().slice(0, 200);
+        }
+
+        /* ==========================================================
+         *  STORE — camada de domínio pura (testável sem DOM)
+         * ========================================================== */
+
+        /** Valida esquema mínimo vindo do storage (defesa em profundidade). */
+        function validateExpenseShape(item) {
+            return item &&
+                typeof item.id === 'string' &&
+                typeof item.category === 'string' &&
+                typeof item.date === 'string' &&
+                Number.isInteger(item.cents) && item.cents > 0;
+        }
+
+        function createExpenseStore() {
+            let expenses = loadFromStorage();
+            const listeners = new Set();
+
+            function loadFromStorage() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (!raw) return [];
+                    const parsed = JSON.parse(raw);
+                    if (!Array.isArray(parsed)) {
+                        console.warn('Storage com formato inválido — reiniciando.');
+                        return [];
+                    }
+                    return parsed.filter(validateExpenseShape);
+                } catch (error) {
+                    console.error('Falha ao carregar storage:', error);
+                    return [];
+                }
+            }
+
+            function persist() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+                } catch (error) {
+                    console.error('Falha ao persistir despesas:', error);
+                }
+            }
+
+            function notify() {
+                listeners.forEach((fn) => {
+                    try { fn(); } catch (e) { console.error('Subscriber error:', e); }
+                });
+            }
+
+            return {
+                /** @param {(expense: object) => void} expense */
+                add(expense) {
+                    expenses = [...expenses, expense];
+                    persist();
+                    notify();
+                },
+                /** @param {string} id */
+                removeById(id) {
+                    expenses = expenses.filter((e) => e.id !== id);
+                    persist();
+                    notify();
+                },
+                list() {
+                    return [...expenses].sort((a, b) => b.date.localeCompare(a.date));
+                },
+                hasItems() { return expenses.length > 0; },
+                totalCents() {
+                    return expenses.reduce((sum, e) => sum + e.cents, 0);
+                },
+                totalsByCategory() {
+                    return expenses.reduce((acc, e) => {
+                        acc[e.category] = (acc[e.category] ?? 0) + e.cents;
+                        return acc;
+                    }, {});
+                },
+                uniqueCategoryCount() {
+                    return new Set(expenses.map((e) => e.category)).size;
+                },
+                find(id) {
+                    return expenses.find((e) => e.id === id) ?? null;
+                },
+                subscribe(fn) {
+                    listeners.add(fn);
+                    return () => listeners.delete(fn);
+                },
+            };
+        }
+
+        /* ==========================================================
+         *  FEEDBACK VISUAL
+         * ========================================================== */
+
+        function createFlashMessenger(element) {
+            let hideTimer = null;
+            return (message) => {
+                clearTimeout(hideTimer);
+                element.textContent = message;
+                element.classList.add('show');
+                hideTimer = setTimeout(() => element.classList.remove('show'), MESSAGE_VISIBLE_MS);
+            };
+        }
+
+        /* ==========================================================
+         *  RENDERIZAÇÃO — anti-XSS (textContent, sem innerHTML)
+         * ========================================================== */
+
+        function renderEmptyState(container, icon, message) {
+            container.replaceChildren();
+            const wrap = document.createElement('div');
+            wrap.className = 'empty-state';
+
+            const iconEl = document.createElement('div');
+            iconEl.className = 'empty-state-icon';
+            iconEl.setAttribute('aria-hidden', 'true');
+            iconEl.textContent = icon;
+
+            const text = document.createElement('p');
+            text.textContent = message;
+
+            wrap.append(iconEl, text);
+            container.append(wrap);
+        }
+
+        /** Cria nó de resumo por categoria (sem innerHTML). */
+        function createSummaryNode(label, formattedValue, isTotal = false) {
+            const item = document.createElement('div');
+            item.className = isTotal ? 'summary-item total' : 'summary-item category';
+
+            const labelEl = document.createElement('span');
+            labelEl.textContent = label;
+
+            const valueEl = document.createElement('span');
+            valueEl.className = 'summary-value';
+            valueEl.textContent = formattedValue;
+
+            item.append(labelEl, valueEl);
+            return item;
+        }
+
+        function renderCategorySummary(container, store) {
+            container.replaceChildren();
+
+            if (!store.hasItems()) {
+                renderEmptyState(container, '📭', 'Nenhuma despesa cadastrada.');
+                return;
+            }
+
+            const totals = store.totalsByCategory();
+            const sortedCategories = Object.keys(totals).sort((a, b) =>
+                a.localeCompare(b, 'pt-BR', { sensitivity: 'base' })
+            );
+
+            const fragment = document.createDocumentFragment();
+            sortedCategories.forEach((category) => {
+                fragment.append(createSummaryNode(category, formatCents(totals[category])));
+            });
+            fragment.append(createSummaryNode('Total Geral', formatCents(store.totalCents()), true));
+            container.append(fragment);
+        }
+
+        /** Cria um artigo representando uma despesa (sem innerHTML; sem onclick inline). */
+        function createExpenseArticle(expense) {
+            const item = document.createElement('article');
+            item.className = 'expense-item';
+            item.dataset.expenseId = expense.id;
+
+            const info = document.createElement('div');
+            info.className = 'expense-info';
+
+            const cat = document.createElement('h3');
+            cat.className = 'expense-category';
+            cat.textContent = expense.category;
+            info.append(cat);
+
+            if (expense.description) {
+                const desc = document.createElement('p');
+                desc.className = 'expense-description';
+                desc.textContent = expense.description;
+                info.append(desc);
+            }
+
+            const dateEl = document.createElement('time');
+            dateEl.className = 'expense-date';
+            dateEl.dateTime = expense.date;
+            dateEl.textContent = '📅 ' + formatDate(expense.date);
+            info.append(dateEl);
+
+            const amount = document.createElement('span');
+            amount.className = 'expense-amount';
+            amount.textContent = formatCents(expense.cents);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'btn btn-danger';
+            removeBtn.dataset.action = 'remove';
+            removeBtn.setAttribute(
+                'aria-label',
+                `Remover despesa de ${expense.category} no valor de ${formatCents(expense.cents)}`
+            );
+            removeBtn.textContent = '🗑️ Remover';
+
+            item.append(info, amount, removeBtn);
+            return item;
+        }
+
+        function renderExpensesList(container, store) {
+            container.replaceChildren();
+
+            if (!store.hasItems()) {
+                renderEmptyState(container, '💸', 'Nenhuma despesa cadastrada ainda. Adicione sua primeira despesa no formulário acima!');
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            store.list().forEach((expense) => fragment.append(createExpenseArticle(expense)));
+            container.append(fragment);
+        }
+
+        function renderStats(store) {
+            const byId = (id) => document.getElementById(id);
+            byId('stat-total-count').textContent = String(store.list().length);
+            byId('stat-total-categories').textContent = String(store.uniqueCategoryCount());
+            byId('stat-total-amount').textContent = formatCents(store.totalCents());
+        }
+
+        function renderAll(store) {
+            renderStats(store);
+            renderCategorySummary(document.getElementById('categorySummary'), store);
+            renderExpensesList(document.getElementById('expensesList'), store);
+        }
+
+        /* ==========================================================
+         *  VALIDAÇÃO DE FORMULÁRIO
+         * ========================================================== */
+
+        function readExpenseDraft() {
+            return {
+                category: sanitizeText(document.getElementById('category').value),
+                description: sanitizeText(document.getElementById('description').value),
+                rawAmount: document.getElementById('amount').value,
+                date: document.getElementById('date').value,
+            };
+        }
+
+        function validateDraft(draft) {
+            if (!draft.category) return 'Por favor, selecione uma categoria.';
+            if (!draft.date)      return 'Por favor, selecione uma data.';
+            const parsed = parseAmountToCents(draft.rawAmount);
+            if (!parsed.ok) return parsed.reason;
+            return null;
+        }
+
+        function buildExpense(draft) {
+            const parsed = parseAmountToCents(draft.rawAmount);
+            return {
+                id: createId(),
+                category: draft.category,
+                description: draft.description,
+                cents: parsed.cents,
+                date: draft.date,
+            };
+        }
+
+        function resetForm(form) {
+            form.reset();
+            document.getElementById('date').value = todayLocalIso();
+        }
+
+        /* ==========================================================
+         *  AÇÕES (handlers de alto nível)
+         * ========================================================== */
+
+        function handleAddExpense(event, store, showError, showSuccess) {
+            event.preventDefault();
+            const draft = readExpenseDraft();
+            const error = validateDraft(draft);
+            if (error) { showError(error); return; }
+
+            store.add(buildExpense(draft));
+            resetForm(event.target);
+            showSuccess('Despesa adicionada com sucesso!');
+        }
+
+        function handleRemoveExpense(store, findExpense, showError, showSuccess) {
+            const expense = findExpense();
+            if (!expense) {
+                showError('Despesa não encontrada — ela pode já ter sido removida.');
+                return;
+            }
+            const message = `Remover despesa "${expense.category}" de ${formatCents(expense.cents)}?`;
+            if (!window.confirm(message)) return;
+            store.removeById(expense.id);
+            showSuccess('Despesa removida com sucesso!');
+        }
+
+        /* ==========================================================
+         *  BOOTSTRAP
+         * ========================================================== */
+
+        (function bootstrap() {
+            const store = createExpenseStore();
+
+            // Referências DOM (cache)
+            const dom = {
+                form:             document.getElementById('expenseForm'),
+                expensesList:     document.getElementById('expensesList'),
+                categorySummary:  document.getElementById('categorySummary'),
+                errorMessage:     document.getElementById('errorMessage'),
+                successMessage:   document.getElementById('successMessage'),
+                dateInput:        document.getElementById('date'),
+            };
+
+            dom.dateInput.value = todayLocalIso();
+
+            // Flash messengers
+            const showError   = createFlashMessenger(dom.errorMessage);
+            const showSuccess = createFlashMessenger(dom.successMessage);
+
+            // Assina re-render em qualquer mutação do store
+            store.subscribe(() => renderAll(store));
+
+            // Delegação de eventos (anti-XSS, compatível com CSP)
+            dom.expensesList.addEventListener('click', (event) => {
+                const removeBtn = event.target.closest('[data-action="remove"]');
+                if (!removeBtn) return;
+                const article = removeBtn.closest('.expense-item');
+                const expenseId = article?.dataset.expenseId;
+                handleRemoveExpense(
+                    store,
+                    () => store.find(expenseId),
+                    showError,
+                    showSuccess
+                );
+            });
+
+            // Submit do formulário
+            dom.form.addEventListener('submit', (event) =>
+                handleAddExpense(event, store, showError, showSuccess)
+            );
+
+            // Render inicial
+            renderAll(store);
+        })();
+    </script>
+
+
+</body></html>
